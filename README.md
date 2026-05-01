@@ -1,2 +1,2 @@
-# CSE_340_Leisan_2026
+# CSE340_practice_leisan
 Practice project for CSE 340
