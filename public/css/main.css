@@ -1,5 +1,10 @@
 html, body {
-    background-color: lightblue;
+    background: linear-gradient(
+        90deg,
+        lightblue 0%,
+        #87cefa 50%,
+        #4682b4 100%
+    );
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
