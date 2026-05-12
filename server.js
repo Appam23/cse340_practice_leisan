@@ -46,6 +46,54 @@ app.use((req, res, next) => {
     next();
 });
 
+// Course data - place this after imports, before routes
+const courses = {
+    'CS121': {
+        id: 'CS121',
+        title: 'Introduction to Programming',
+        description: 'Learn programming fundamentals using JavaScript and basic web development concepts.',
+        credits: 3,
+        sections: [
+            { time: '9:00 AM', room: 'STC 392', professor: 'Brother Jack' },
+            { time: '2:00 PM', room: 'STC 394', professor: 'Sister Enkey' },
+            { time: '11:00 AM', room: 'STC 390', professor: 'Brother Keers' }
+        ]
+    },
+    'MATH110': {
+        id: 'MATH110',
+        title: 'College Algebra',
+        description: 'Fundamental algebraic concepts including functions, graphing, and problem solving.',
+        credits: 4,
+        sections: [
+            { time: '8:00 AM', room: 'MC 301', professor: 'Sister Anderson' },
+            { time: '1:00 PM', room: 'MC 305', professor: 'Brother Miller' },
+            { time: '3:00 PM', room: 'MC 307', professor: 'Brother Thompson' }
+        ]
+    },
+    'ENG101': {
+        id: 'ENG101',
+        title: 'Academic Writing',
+        description: 'Develop writing skills for academic and professional communication.',
+        credits: 3,
+        sections: [
+            { time: '10:00 AM', room: 'GEB 201', professor: 'Sister Anderson' },
+            { time: '12:00 PM', room: 'GEB 205', professor: 'Brother Davis' },
+            { time: '4:00 PM', room: 'GEB 203', professor: 'Sister Enkey' }
+        ]
+    },
+    'APPAM101': {
+        id: 'APP101',
+        title: 'Random Writing',
+        description: 'Develop random writing skills for fun communication.',
+        credits: 3,
+        sections: [
+            { time: '11:00 AM', room: 'GEB 1011', professor: 'Mr. Appam' },
+            { time: '12:30 PM', room: 'GEB 3015', professor: 'Brother Wang' },
+            { time: '3:00 PM', room: 'GEB 5003', professor: 'Sister Sweetie' }
+        ]
+    }
+};
+
 /**
  * Routes
  */
@@ -63,6 +111,55 @@ app.get('/products', (req, res) => {
     const title = 'Our Products';
     res.render('products', { title });
 });
+
+// Course catalog list page
+app.get('/catalog', (req, res) => {
+    res.render('catalog', {
+        title: 'Course Catalog',
+        courses: courses
+    });
+});
+
+// Enhanced course detail route with sorting
+app.get('/catalog/:courseId', (req, res, next) => {
+    const courseId = req.params.courseId;
+    const course = courses[courseId];
+
+    if (!course) {
+        const err = new Error(`Course ${courseId} not found`);
+        err.status = 404;
+        return next(err);
+    }
+
+    // Get sort parameter (default to 'time')
+    const sortBy = req.query.sort || 'time';
+
+    // Create a copy of sections to sort
+    let sortedSections = [...course.sections];
+
+    // Sort based on the parameter
+    switch (sortBy) {
+        case 'professor':
+            sortedSections.sort((a, b) => a.professor.localeCompare(b.professor));
+            break;
+        case 'room':
+            sortedSections.sort((a, b) => a.room.localeCompare(b.room));
+            break;
+        case 'time':
+        default:
+            // Keep original time order as default
+            break;
+    }
+
+    console.log(`Viewing course: ${courseId}, sorted by: ${sortBy}`);
+
+    res.render('course-detail', {
+        title: `${course.id} - ${course.title}`,
+        course: { ...course, sections: sortedSections },
+        currentSort: sortBy
+    });
+});
+
 
 // Test route for 500 errors
 app.get('/test-error', (req, res, next) => {
@@ -84,6 +181,8 @@ app.use((req, res, next) => {
     err.status = 404;
     next(err);
 });
+
+// Course catalog list page (moved earlier to avoid being shadowed by 404)
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -117,22 +216,27 @@ app.use((err, req, res, next) => {
 
 // When in development mode, start a WebSocket server for live reloading
 if (NODE_ENV.includes('dev')) {
-    const ws = await import('ws');
+    import('ws')
+        .then(({ WebSocketServer }) => {
+            const wsPort = Number(PORT) + 1;
+            const wsServer = new WebSocketServer({ port: wsPort });
 
-    try {
-        const wsPort = parseInt(PORT) + 1;
-        const wsServer = new ws.WebSocketServer({ port: wsPort });
+            wsServer.on('listening', () => {
+                console.log(`WebSocket server is running on port ${wsPort}`);
+            });
 
-        wsServer.on('listening', () => {
-            console.log(`WebSocket server is running on port ${wsPort}`);
+            wsServer.on('error', (error) => {
+                if (error.code === 'EADDRINUSE') {
+                    console.warn(`WebSocket port ${wsPort} is already in use; skipping live reload server.`);
+                    return;
+                }
+
+                console.error('WebSocket server error:', error);
+            });
+        })
+        .catch((error) => {
+            console.error('Failed to import ws module:', error);
         });
-
-        wsServer.on('error', (error) => {
-            console.error('WebSocket server error:', error);
-        });
-    } catch (error) {
-        console.error('Failed to start WebSocket server:', error);
-    }
 }
 
 // Start the server and listen on the specified port
