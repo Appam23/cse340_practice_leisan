@@ -10,6 +10,17 @@
     text-align: center;
     box-shadow: 0 2px 8px rgba(31, 63, 115, 0.12);
 }
+.greeting2 {
+    max-width: 500px;
+    margin: 0 auto 1rem auto;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    background: rgba(105, 104, 104, 0.75);
+    color: #c4dd5d;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(31, 63, 115, 0.12);
+}
 
 .course-list {
     display: grid;

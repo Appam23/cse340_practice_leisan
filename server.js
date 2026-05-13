@@ -65,22 +65,45 @@ app.use((req, res, next) => {
 // Global middleware for time-based greeting
 app.use((req, res, next) => {
     const currentHour = new Date().getHours();
+    let currentTime;
 
     if (currentHour < 12) {
-        res.locals.greeting = "Good morning!";
-    } else if ( currentHour < 17 ) {
-        res.locals.greeting = "Good afternoon!";
+        currentTime= 'good morning!';
+    } else if (currentHour < 17) {
+        currentTime = 'good afternoon!';
     } else {
-        res.locals.greeting = "Good evening!";
+        currentTime = 'good evening!';
     }
-    
+
+    res.locals.greeting = `Hello ${currentTime}!`;
 
     next();
 });
 
+// Global middleware for season-based greeting
+app.use((req, res, next) => {
+    const currentMonth = new Date().getMonth();
+    let currentSeason;
+
+    if (currentMonth >= 2 && currentMonth <= 4) {
+        currentSeason = 'spring :) ';
+    } else if (currentMonth >= 5 && currentMonth <= 7) {
+        currentSeason = 'uff summer!';
+    } else if (currentMonth >= 8 && currentMonth <= 10) {
+        currentSeason = 'joyful fall!';
+    } else {
+        currentSeason = 'cold winter';
+    }
+
+    res.locals.seasonGreeting = `Happy ${currentSeason}!`;
+
+    next();
+});
+
+
 // Global middleware for random theme selection
 app.use((req, res, next) => {
-    const themes = ['blue-theme', 'green-theme', 'red-theme'];
+    const themes = ['blue-theme', 'green-theme', 'red-theme', 'purple-theme', 'yellow-theme', 'yellow-green-theme'];
 
     // Pick a random theme from the array
     const randomIndex = Math.floor(Math.random() * themes.length);
@@ -99,6 +122,15 @@ app.use((req, res, next) => {
 });
 
 // Route-specific middleware that sets custom headers
+let demoPageRequestCount = 0;
+
+const trackDemoPageRequests = (req, res, next) => {
+    demoPageRequestCount += 1;
+    res.locals.demoPageRequestCount = demoPageRequestCount;
+
+    next();
+};
+
 const addDemoHeaders = (req, res, next) => {
     // Your task: Set custom headers using res.setHeader()
     res.setHeader('X-Demo-Page', 'true');
@@ -110,7 +142,7 @@ const addDemoHeaders = (req, res, next) => {
 };
 
 // Demo page route with header middleware
-app.get('/demo', addDemoHeaders, (req, res) => {
+app.get('/demo', trackDemoPageRequests, addDemoHeaders, (req, res) => {
     res.render('demo', {
         title: 'Middleware Demo Page'
     });
