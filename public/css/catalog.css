@@ -1,4 +1,16 @@
 /* Course catalog styles using native CSS nesting */
+.greeting {
+    max-width: 800px;
+    margin: 0 auto 1rem auto;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #1f3f73;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(31, 63, 115, 0.12);
+}
+
 .course-list {
     display: grid;
     gap: 1.5rem;

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../partials/head') %>
-<body>
+<body class="<%= bodyClass %>">
+    <p class="greeting"><%= greeting %></p>
     <header>
         <nav>
     <ul>
@@ -9,6 +10,7 @@
         <li><a href="/about">About</a></li>
         <li><a href="/catalog">Course Catalog</a></li>
         <li><a href="/products">Products</a></li>
+        <li><a href="/demo">Middleware Demo</a></li>
     </ul>
 </nav>
     </header>
