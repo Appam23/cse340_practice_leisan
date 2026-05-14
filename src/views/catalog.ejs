@@ -3,8 +3,22 @@
     <h1>Course Catalog</h1>
     <p>Browse our available courses and click on any course to see detailed information including available sections and instructors.</p>
 
+    <form method="get" action="/catalog" class="catalog-filters">
+        <label>Credits:
+            <input type="number" name="credits" min="0" value="<%= filters ? filters.credits : '' %>">
+        </label>
+        <label>Professor:
+            <input type="text" name="professor" value="<%= filters ? filters.professor : '' %>">
+        </label>
+        <button type="submit" class="btn-primary">Filter</button>
+        <a href="/catalog" class="clear-link">Clear</a>
+    </form>
+
     <div class="course-list">
-        <% Object.values(courses).forEach(course => { %>
+        <% if (courses.length === 0) { %>
+            <p><em>No courses match the filters.</em></p>
+        <% } %>
+        <% courses.forEach(course => { %>
             <div class="course-card">
                 <h3><a href="/catalog/<%= course.id %>"><%= course.title %></a></h3>
                 <p class="course-id"><%= course.id %> • <%= course.credits %> credits</p>

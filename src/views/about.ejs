@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[PAGE TITLE]</title>
-    <link rel="stylesheet" href="/css/main.css">
-</head>
+<%- include('partials/header') %>
 <body>
     <h1>About Me</h1>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/products">Products</a></li>
-        </ul>
-    </nav>
-    <p>Hi, I am Appam Leisan </p>
-     <p>I love to make friend and hangout sometime 
-     when time permits.</p> 
-     <p> My hobbies are playing music and fishing.</p>
-    </p>
+
+    <figure>
+        <img src="/images/me.jpeg" alt=" My pic" style="max-width:100px;width:50%;height:auto;display:block;margin-bottom:1rem; border-radius: 50%;">
+    </figure>
+
+    <p>Hi, I am Appam Leisan.</p>
+    <p>I love to make friends and hang out sometimes when time permits.</p>
+    <p>My hobbies are playing music and fishing.</p>
 </body>
-</html>
+<%- include('partials/footer') %>
