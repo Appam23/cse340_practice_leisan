@@ -49,7 +49,14 @@ const addLocalVariables = (req, res, next) => {
     res.locals.seasonGreeting = `Happy ${currentSeason}!`;
 
     // Randomly assign a theme class to the body
-    const themes = ['blue-theme', 'green-theme', 'red-theme'];
+    const themes = [
+        'blue-theme',
+        'green-theme',
+        'red-theme',
+        'purple-theme',
+        'yellow-theme',
+        'yellow-green-theme',
+    ];
     const randomTheme = themes[Math.floor(Math.random() * themes.length)];
     res.locals.bodyClass = randomTheme;
 
