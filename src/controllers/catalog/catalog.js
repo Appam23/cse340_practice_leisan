@@ -53,8 +53,6 @@ const courseDetailPage = (req, res, next) => {
     });
 };
 
-export { catalogPage, courseDetailPage };
-
 // Route handler to render courses grouped by department
 const catalogByDepartmentPage = (req, res) => {
     const departments = getCoursesByDepartment();
@@ -64,5 +62,7 @@ const catalogByDepartmentPage = (req, res) => {
         departments: departments
     });
 };
+export { catalogPage, courseDetailPage, catalogByDepartmentPage };
 
-export { catalogByDepartmentPage };
+
+
