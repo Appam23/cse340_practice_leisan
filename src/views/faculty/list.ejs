@@ -4,7 +4,7 @@
     <ul>
       <% facultyMembers.forEach(member => { %>
         <li>
-            <a href="/faculty/<%= member.id %>"><%= member.name %></a>
+            <a href="/faculty/<%= member.slug %>"><%= member.name %></a>
             <br>
             <span><strong>Department:</strong> <%= member.department %></span>
             <br>
