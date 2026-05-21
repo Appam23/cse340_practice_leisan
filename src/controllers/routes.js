@@ -4,6 +4,7 @@ import { catalogPage, courseDetailPage, } from './catalog/catalog.js';
 import { homePage, aboutPage, demoPage, testConflictPage, testErrorPage } from './index.js';
 import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
 import contactRoutes from './forms/contact.js';
+import registrationRoutes from './forms/registration.js';
 
 // Create a new router instance
 const router = Router();
@@ -20,8 +21,12 @@ router.use('/contact', (req, res, next) => {
     next();
 });
 
-// Contact form routes
-router.use('/contact', contactRoutes);
+// Add registration-specific styles to all registration routes
+router.use('/register', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/registration.css">');
+    next();
+});
+
 
 // route definitions
 
@@ -47,5 +52,11 @@ router.get('/test-conflict', testConflictPage);
 
 // Route to trigger a test error
 router.get('/test-error', testErrorPage);
+
+// Contact form routes
+router.use('/contact', contactRoutes);
+
+// Registration routes
+router.use('/register', registrationRoutes);
 
 export default router;

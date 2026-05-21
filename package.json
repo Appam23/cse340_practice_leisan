@@ -1,6 +1,7 @@
 {
   "name": "cse_340_leisan_2026",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
     "express-validator": "^7.3.2",

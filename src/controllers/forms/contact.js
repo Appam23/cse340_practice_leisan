@@ -8,7 +8,8 @@ const router = Router();
  * Display the contact form page.
  */
 const showContactForm = (req, res) => {
-    res.render('forms/contacts/form', {
+    // Render the contact form located under src/views/forms/contact
+    return res.render('forms/contact/form', {
         title: 'Contact Us'
     });
 };
@@ -56,7 +57,7 @@ const showContactResponses = async (req, res) => {
         console.error('Error retrieving contact forms:', error);
     }
 
-    res.render('forms/contacts/responses', {
+    return res.render('forms/contact/responses', {
         title: 'Contact Form Submissions',
         contactForms
     });
