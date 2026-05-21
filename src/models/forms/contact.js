@@ -32,4 +32,4 @@ const getAllContactForms = async () => {
     return result.rows;
 };
 
-export { createContactForm, getAllContactForms };
+export { createContactForm, getAllContactForms };   
