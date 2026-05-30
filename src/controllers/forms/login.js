@@ -38,7 +38,9 @@ const processLogin = async (req, res) => {
 
     if (!errors.isEmpty()) {
        
-        console.error('Validation error', errors.array());
+        errors.array().forEach(error => {
+        req.flash('error', error.msg);
+    });
         return res.redirect('/login');
     }
 
@@ -48,23 +50,25 @@ const processLogin = async (req, res) => {
 
             const user = await findUserByEmail(email);
             if (!user) {
-                console.log('User not found');
+                req.flash('warning', 'Invalid email or password');
                 return res.redirect('/login');
             }
             const isPasswordValid = await verifyPassword(password, user.password);
             if (!isPasswordValid) {
-                console.log("Invalid password");
+                req.flash('warning', 'Invalid email or password');
                 return res.redirect('/login');
             }
 
         // SECURITY: Remove password from user object before storing in session
         delete user.password;
             req.session.user = user;
+            req.flash('success', `Welcome back, ${user.name}!`);
             return res.redirect('/dashboard');
 
     } catch (error) {
         // Model functions do not catch errors, so handle them here
         console.error('Login error:', error);
+        req.flash('error', 'User not found');
         return res.redirect('/login');
         
     }

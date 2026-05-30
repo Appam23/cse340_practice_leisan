@@ -20,6 +20,7 @@ const registrationValidation = [
         .withMessage('Must be a valid email address'),
     body('emailConfirm')
         .trim()
+        .normalizeEmail()
         .custom((value, { req }) => value === req.body.email)
         .withMessage('Email addresses must match'),
     body('password')
@@ -51,10 +52,11 @@ const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        // TODO: Log validation errors to console for debugging
-        console.error('Validation errors:', errors.array())
-        // TODO: Redirect back to /register
-        return res.redirect('/register'); 
+    // Store each validation error as a separate flash message
+         errors.array().forEach(error => {
+        req.flash('error', error.msg);
+    });
+        return res.redirect('/login'); 
     }
 
         // Extract validated data from request body
@@ -64,8 +66,8 @@ const processRegistration = async (req, res) => {
             // Check if email already exists in database
             const exists = await emailExists(email);
             if (exists) {
-                console.log('Email already registered');
-                return res.redirect('/register');
+                req.flash('warning', 'An account with that email already exists. Please log in instead.');
+                return res.redirect('/login');
             }
 
             // Hash the password before saving to database
@@ -73,14 +75,14 @@ const processRegistration = async (req, res) => {
 
             // Save user to database with hashed password
             await saveUser(name, email, hashedPassword);
-            console.log('User Registered');
-            return res.redirect('/register/list');
+            req.flash('success', 'Registration successful. Please log in.');
+            return res.redirect('/login');
         // NOTE: Later when we add authentication, we'll change this to require login first
     } catch (error) {
-        // TODO: Log the error to console
-        console.log('Registration error:', error);
+        console.error('Registration error:', error);
+        req.flash('error', 'Unable to submit your email. Please try again later.');
         // TODO: Redirect back to /register
-        return res.redirect('/register');
+        return res.redirect('/login');
     }
 };
 

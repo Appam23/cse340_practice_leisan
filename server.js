@@ -10,6 +10,7 @@ import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import { caCert } from './src/models/db.js';
 import { startSessionCleanup } from './src/utils/session-cleanup.js';
+import flash from './src/middleware/flash.js';
 
 /**
  * Server configuration
@@ -67,11 +68,11 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-/**
- * Global Middleware
- */
-app.use(addLocalVariables);
+// Flash message middleware (requires session)
+app.use(flash);
 
+// Global middleware (sets res.locals variables)
+app.use(addLocalVariables);
 /**
  * Routes
  */
