@@ -101,3 +101,26 @@ body {
         }
     }
 }
+
+.faculty-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 720px;
+    padding: 1rem;
+}
+
+.faculty-photo {
+    width: 50%;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 7px;
+    background: url('https://placehold.co/480') center / cover no-repeat;
+}
+h1{
+    text-align: center;
+}

@@ -3,7 +3,8 @@
     <h1>Faculty list</h1>
     <ul>
       <% facultyMembers.forEach(member => { %>
-        <li>
+        <li class="faculty-card">
+            <img class="faculty-photo" src="/images/faculty/<%= member.slug %>.jpg" alt="<%= member.name %>">
             <a href="/faculty/<%= member.slug %>"><%= member.name %></a>
             <br>
             <span><strong>Department:</strong> <%= member.department %></span>

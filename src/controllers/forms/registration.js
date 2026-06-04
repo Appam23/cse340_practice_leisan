@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, validationResult } from 'express-validator';
+
 import bcrypt from 'bcrypt';
 import { 
     emailExists, 
@@ -10,63 +10,12 @@ import {
     deleteUser
 } from '../../models/forms/registration.js';
 import { requireLogin } from '../../middleware/auth.js';
+import { registrationValidation, updateAccountValidation } from '../../middleware/validation/forms.js';
+import { validationResult } from 'express-validator';
 
 const router = Router();
 
-/**
- * Validation rules for user registration
- */
-const registrationValidation = [
-    body('name')
-        .trim()
-        .isLength({ min: 2, max: 100 })
-        .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes')
-        .withMessage('Name must be at least 2 and 100 characters'),
-    body('email')
-        .trim()
-        .isEmail()
-        .normalizeEmail()
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long'),
-    body('emailConfirm')
-        .trim()
-        .normalizeEmail()
-        .custom((value, { req }) => value === req.body.email)
-        .withMessage('Email addresses must match'),
-    body('password')
-        .isLength({ min: 8, max: 128 })
-        .matches(/[0-9]/)
-        .withMessage('Password must be between 8 and 128 characters')
-        .matches(/[a-z]/)
-        .withMessage('Password must contain at least one lowercase letter')
-        .matches(/[A-Z]/)
-        .withMessage ('Password must contain at least one uppercase letter')
-        .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)
-        .withMessage ('Password must contain at least one specila character letter'),
-    body('passwordConfirm')
-        .custom((value, { req }) => value === req.body.password)
-        .withMessage('Passwords must match')
-   
-];
-/**
- * Validation rules for editing user accounts
- */
-const editValidation = [
-    body('name')
-        .trim()
-        .isLength({ min: 2, max: 100 })
-        .withMessage('Name must be between 2 and 100 characters')
-        .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
-    body('email')
-        .trim()
-        .isEmail()
-        .normalizeEmail()
-        .withMessage('Must be a valid email address')
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long')
-];
+
 /**
  * Display the registration form page.
  */
@@ -282,7 +231,7 @@ router.get('/:id/edit', requireLogin, showEditAccountForm);
 /**
  * POST /register/:id/edit - Process account edit
  */
-router.post('/:id/edit', requireLogin, editValidation, processEditAccount);
+router.post('/:id/edit', requireLogin, updateAccountValidation, processEditAccount);
 
 /**
  * POST /register/:id/delete - Delete user account
